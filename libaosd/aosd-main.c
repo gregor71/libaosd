@@ -117,19 +117,22 @@ aosd_loop_for(Aosd* aosd, unsigned loop_ms)
     struct pollfd pollfd = { ConnectionNumber(aosd->display), POLLIN, 0 };
     int ret = poll(&pollfd, 1, dt);
 
-    if (ret == 0)
-      break;
-
-    if (ret < 0)
+    if (loop_ms != 1)
     {
-      if (errno != EINTR)
-      {
-        perror("poll");
-        abort();
-      }
+        if (ret == 0)
+          break;
+
+        if (ret < 0)
+        {
+          if (errno != EINTR)
+          {
+            perror("poll");
+            abort();
+          }
+        }
+        else
+          aosd_loop_once(aosd);
     }
-    else
-      aosd_loop_once(aosd);
   }
 }
 
