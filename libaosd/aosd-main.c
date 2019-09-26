@@ -111,9 +111,11 @@ aosd_loop_for(Aosd* aosd, unsigned loop_ms)
     gettimeofday(&tv_now, NULL);
     int dt = (tv_until.tv_sec  - tv_now.tv_sec ) * 1000 +
              (tv_until.tv_usec - tv_now.tv_usec) / 1000;
-    if (dt <= 0 || !aosd->shown)
-      break;
-
+    if (loop_ms != 1)
+    {
+      if (dt <= 0 || !aosd->shown)
+        break;
+    }
     struct pollfd pollfd = { ConnectionNumber(aosd->display), POLLIN, 0 };
     int ret = poll(&pollfd, 1, dt);
 
